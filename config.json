@@ -1,0 +1,8 @@
+{"api_key":"1b102a985cc7557151f23533380d3b75",
+"request":["dividend", "profile", "quote","rating","dcf","metric","ratio","data","detailed_data","list"],
+"run_as_service":false,
+"run_hours":"",
+"log_level":"low",
+"automatic_db_update":[],
+"event_type":[],
+"event_include":[]}
