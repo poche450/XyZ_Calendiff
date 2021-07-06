@@ -20,7 +20,12 @@ class stock_data():
     def get_dividend(self):
         func_name="dividends"
         dividends=pd.DataFrame(fa.stock_dividend(self.ticker, self.api_key, begin=self.begin_date, end=self.end_date))
-        div_to_sql=dividends.to_sql(f"{self.ticker}_{func_name}",db().conn,index=False,if_exists="replace")
+        dividends.set_index(range(len(dividends.index)), inplace=True)
+        print(dividends)
+        print(dividends[0])
+        records=dividends.to_records(index=True)
+        print(records)
+        #db().insert_query(records,func_name)
         return {"functionName":"dividend","result":dividends,"msg_log":f"Added {func_name} to database for {self.ticker}"}
 
     def show_all_comp(self):
@@ -33,13 +38,14 @@ class stock_data():
         func_name="profile"
         # Collect general company information
         profile=pd.DataFrame(fa.profile(self.ticker, self.api_key))
-        profile=profile.set_index("symbol")
+        
         msg_log=f"Added {func_name} to database for {self.ticker}"
-        try:
-            profile_to_sql=profile.to_sql(func_name, db().conn, if_exists="append", index=True,index_label="symbol")
-        except Error as e:
-            db().query_executor()
-            msg_log=f"{e}"
+        #try:
+        records=profile.to_records()
+        db().insert_query(records,func_name)
+    #except Error as e:
+        #db().query_executor()
+        #msg_log=f"{e}"
         return {"functionName":func_name,"result":profile,"msg_log":msg_log}
 
     def get_quote(self):
